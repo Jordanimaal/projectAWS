@@ -1,0 +1,134 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  BabyfootHistoryBucket:
+    Type: String
+    Default: ebabyfoot-data-bucket
+
+  BabyfootIoTBucketName:
+    Type: String
+    Default: ebabyfoot-iot-bucket
+    
+  EnvironmentName:
+    Type: String
+    Default: ebabyfoot
+
+  Stage:
+    Type: String
+    Default: dev
+
+  StackName:
+    Type: String
+    Default: ebabyfoot-iot-stack
+
+Resources:
+  BabyfootBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BabyfootHistoryBucket
+      AccessControl: BucketOwnerRead
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+        - Key: stage
+          Value: !Ref Stage
+
+  IoTBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BabyfootIoTBucketName
+      AccessControl: BucketOwnerRead
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+        - Key: stage
+          Value: !Ref Stage
+
+  BabyfootMatchesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: firstTeam
+          AttributeType: S
+        - AttributeName: secondTeam
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+      KeySchema:
+        - AttributeName: firstTeam
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: secondTeam-index
+          KeySchema:
+            - AttributeName: secondTeam
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      Tags:
+        - Key: environment
+          Value: !Ref EnvironmentName
+        - Key: stage
+          Value: !Ref Stage
+
+  MQTTPolicy:
+    Type: AWS::IoT::Policy
+    Properties: 
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+            - iot:Connect
+            Resource: !Sub 'arn:aws:iot:${AWS::Region}:${AWS::AccountId}:client/${!iot:Connection.Thing.ThingName}'
+          - Effect: Allow
+            Action:
+            - iot:Publish
+            Resource: !Sub 'arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${Stage}/beehive/${!iot:Connection.Thing.ThingName}/from_babyfoot'
+          - Effect: Allow
+            Action:
+            - iot:Subscribe
+            Resource: !Sub 'arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/${Stage}/beehive/${!iot:Connection.Thing.ThingName}/from_clients'
+
+
+  OnStackDeploy:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-${Stage}-stack-deploy'
+      Runtime: nodejs14.x
+      Handler: src/handlers/on-stack-deploy.handler
+      Environment:
+        Variables:
+          MQTT_POLICY: !Ref MQTTPolicy
+          BUCKET_NAME: !Ref BabyfootIoTBucketName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: 'iot:*'
+              Resource: '*'
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: 's3:*'
+              Resource: !Sub '${IoTBucket.Arn}/*'
+
+  InvokeLambda:
+    Type: Custom::LambdaInvoke
+    Version: "1.0"
+    DependsOn: MQTTPolicy
+    Properties:
+      ServiceToken: !GetAtt OnStackDeploy.Arn
+      Region: !Ref "AWS::Region"
+      StackName: !Ref StackName
