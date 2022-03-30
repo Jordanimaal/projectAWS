@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "aws-sdk": "^2.1100.0"
+  },
+  "dependencies": {
+    "cfn-response-promise": "^1.1.0"
   }
 }
