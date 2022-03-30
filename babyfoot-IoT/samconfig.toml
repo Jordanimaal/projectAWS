@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "ebabyfoot-iot-stack"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1hclhg5nihc3q"
+s3_prefix = "ebabyfoot-iot-stack"
+region = "eu-central-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "BabyfootHistoryBucket=\"ebabyfoot-data-bucket\" BabyfootIoTBucketName=\"ebabyfoot-iot-bucket\" EnvironmentName=\"ebabyfoot\" Stage=\"dev\" StackName=\"ebabyfoot-iot-stack\""
+image_repositories = []

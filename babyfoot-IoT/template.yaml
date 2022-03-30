@@ -124,11 +124,36 @@ Resources:
               Action: 's3:*'
               Resource: !Sub '${IoTBucket.Arn}/*'
 
-  InvokeLambda:
+  OnStackDelete:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${EnvironmentName}-${Stage}-stack-delete'
+      Runtime: nodejs14.x
+      Handler: src/handlers/on-stack-delete.handler
+      Environment:
+        Variables:
+          MQTT_POLICY: !Ref MQTTPolicy
+          BUCKET_NAME: !Ref BabyfootIoTBucketName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: 'iot:*'
+              Resource: '*'
+            - Effect: Allow
+              Action: 's3:*'
+              Resource: !Sub '${IoTBucket.Arn}/*'
+
+  InvokeDeployLambda:
     Type: Custom::LambdaInvoke
     Version: "1.0"
     DependsOn: MQTTPolicy
     Properties:
       ServiceToken: !GetAtt OnStackDeploy.Arn
-      Region: !Ref "AWS::Region"
-      StackName: !Ref StackName
+
+  InvokeDeleteLambda:
+    Type: Custom::LambdaInvoke
+    Version: "1.0"
+    DependsOn: OnStackDelete
+    Properties:
+      ServiceToken: !GetAtt OnStackDelete.Arn
