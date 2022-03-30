@@ -2,11 +2,14 @@ const { S3, Iot } = require("aws-sdk");
 const s3Client = new S3();
 const iotClient = new Iot();
 
+const thingsName = ['team1', 'team2'];
+
 /**
  * Create IoT Things and certificates
+ * @param {String} thingName
  * @returns {Object} certificate
  */
-const createThing = async() => {
+const createThing = async(thing) => {
    let certificateCreated = false;
    let policyAttached = false;
    let thingCreated = false;
@@ -55,7 +58,7 @@ const createThing = async() => {
          }
       }
 
-      console.error('Error ::>', error);
+      throw error;
    }
 };
 
@@ -70,20 +73,73 @@ const saveCertificate = async(thingId, certificate) => {
       `${thingId}/private.pem`
    ];
 
-   const params = {
-      Bucket: process.env.BUCKET_NAME,
-      Key: `${thingId}/certificate.pem`,
-      Body: certificate.certificatePem
-   };
+   const promises = [
+      s3Client.putObject({
+         Bucket: process.env.BUCKET_NAME,
+         Key: files[0],
+         Body: certificate.certificatePem
+      }).promise(),
+      s3Client.putObject({
+         Bucket: process.env.BUCKET_NAME,
+         Key: files[1],
+         Body: certificate.keyPair.PrivateKey
+      }).promise(),
+   ];
 
-   await s3Client.putObject(params).promise();
-
-   params.Key = `${thingId}/private.pem`;
-   params.Body = certificate.keyPair.PrivateKey;
-
-   await s3Client.putObject(params).promise();
+   await Promise.all(promises);
 
    return files;
 }
 
-module.exports = { createThing, saveCertificate };
+const getThing = async(thingId) => {
+   return iotClient.describeThing({ thingName: thingId }).promise();
+};
+
+const deleteThing = async(thingId) => {
+   let thing = getThing(thingId);
+
+   if(thing) {
+      let principals = await iotClient.listThingPrincipals({ thingName: thingId }).promise();
+      for (const principal of principals.principals) {
+         let certificateId = principal.split('/')[1];
+
+         await iotClient.detachThingPrincipal({
+            thingName: thingId,
+            principal: principal
+         }).promise();
+
+         await iotClient.detachPrincipalPolicy({
+            policyName: process.env.MQTT_POLICY,
+            principal: principal
+         }).promise();
+
+         await iotClient.updateCertificate({
+            certificateId: certificateId,
+            newStatus: 'INACTIVE'
+         }).promise();
+
+         await iotClient.deleteCertificate({
+            certificateId: certificateId,
+            forceDelete: true
+         }).promise();
+      }
+
+      await iotClient.deleteThing({ thingName: thingId }).promise();
+   }
+};
+
+const deleteThingCertificate = async(thingId) => {
+   const objects = [
+      { Key: `${thingId}/certificate.pem` },
+      { Key: `${thingId}/private.pem` }
+   ];
+
+   return s3Client.deleteObjects({
+      Bucket: process.env.BUCKET_NAME,
+      Delete: {
+         Objects: objects
+      }
+   }).promise();
+}
+
+module.exports = { createThing, saveCertificate, getThing, deleteThing, deleteThingCertificate, thingsName };
