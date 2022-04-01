@@ -50,29 +50,11 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: firstTeam
+        - AttributeName: id
           AttributeType: S
-        - AttributeName: secondTeam
-          AttributeType: S
-        - AttributeName: timestamp
-          AttributeType: N
       KeySchema:
-        - AttributeName: firstTeam
+        - AttributeName: id
           KeyType: HASH
-        - AttributeName: timestamp
-          KeyType: RANGE
-      GlobalSecondaryIndexes:
-        - IndexName: secondTeam-index
-          KeySchema:
-            - AttributeName: secondTeam
-              KeyType: HASH
-            - AttributeName: timestamp
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 5
-            WriteCapacityUnits: 5
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5

@@ -3,7 +3,7 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "ebabyfoot-iot-stack"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1hclhg5nihc3q"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-gh3gtvbv9bnb"
 s3_prefix = "ebabyfoot-iot-stack"
 region = "eu-central-1"
 capabilities = "CAPABILITY_IAM"
