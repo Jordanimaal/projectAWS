@@ -24,6 +24,15 @@
                     ]
                 },
                 {
+                    "name": "ListerMatchIntent",
+                    "slots": [     ],
+                    
+                    "samples": [
+                        "Lister les matchs"
+                        
+                    ]
+                },
+                {
                     "name": "AMAZON.NavigateHomeIntent",
                     "samples": []
                 }

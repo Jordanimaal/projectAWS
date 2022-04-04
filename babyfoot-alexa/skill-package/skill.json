@@ -3,9 +3,9 @@
     "publishingInformation": {
       "locales": {
         "en-US": {
-          "summary": "Sample Short Description",
+          "summary": "Skill de gestion de match de Baby-Foot pour Alexa",
           "examplePhrases": [
-            "Alexa open hello world",
+            "Alexa créé un match ",
             "hello",
             "help"
           ],

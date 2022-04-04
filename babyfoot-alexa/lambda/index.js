@@ -84,6 +84,34 @@ const IntentReflectorHandler = {
     }
 };
 
+const ListerMatchIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'ListerMatchIntent';
+    },
+    handle(handlerInput) {
+        var AWS = require('aws-sdk');
+        AWS.config.update({region: 'eu-west-1',
+                            endpoint:''});
+        var docClient = new AWS.DynamoDB.DocumentClient();
+        var params = { TableName: 'ebabyfoot-iot-stack-BabyfootMatchesTable-T33FEE8DX14M',
+                          Key: {}
+    };
+    docClient.get(params, function(err, data) {
+        if (err) {
+            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+            const speakOutput = 'Sorry, I was unable to find any matches. Please try again later.';
+            return handlerInput.responseBuilder.speak(speakOutput).getResponse();
+        } else {
+            console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+            const speakOutput = 'Here are the matches: ' + data.Item.matches;
+            return handlerInput.responseBuilder.speak(speakOutput).getResponse();
+
+        }
+    });
+    }
+}
+
 // Generic error handling to capture any syntax or routing errors. If you receive an error
 // stating the request handler chain is not found, you have not implemented a handler for
 // the intent being invoked or included it in the skill builder below.
