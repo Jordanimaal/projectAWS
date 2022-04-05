@@ -49,6 +49,7 @@ Resources:
   BabyfootMatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
+      TableName: BabyfootMatches
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
