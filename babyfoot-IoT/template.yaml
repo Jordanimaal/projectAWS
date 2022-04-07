@@ -140,3 +140,11 @@ Resources:
     DependsOn: OnStackDelete
     Properties:
       ServiceToken: !GetAtt OnStackDelete.Arn
+
+Outputs:
+  BabyfootMatchesTable:
+    Description: BabyFoot Matches DynamoDB Table
+    Value: !Ref BabyfootMatchesTable
+    Export:
+      Name: 
+        Fn::Sub: '${AWS::StackName}-babyfoot-table'
