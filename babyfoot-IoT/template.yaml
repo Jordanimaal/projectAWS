@@ -53,9 +53,21 @@ Resources:
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
+        - AttributeName: statut
+          AttributeType: S
       KeySchema:
         - AttributeName: id
           KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: MatchStatus
+          KeySchema:
+            - AttributeName: statut
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
@@ -146,5 +158,5 @@ Outputs:
     Description: BabyFoot Matches DynamoDB Table
     Value: !Ref BabyfootMatchesTable
     Export:
-      Name: 
-        Fn::Sub: '${AWS::StackName}-babyfoot-table'
+      Name: !Sub '${AWS::StackName}-babyfootTable'
+      
