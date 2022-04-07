@@ -159,3 +159,4 @@ Outputs:
     Value: !Ref BabyfootMatchesTable
     Export:
       Name: !Sub '${AWS::StackName}-babyfootTable'
+      
