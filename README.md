@@ -56,9 +56,9 @@ Coût de lecture initial (upfront)
 0,00 USD
 Total des coûts initiaux:
 0,00 USD
-# Coût mensuel :
+### Coût mensuel :
 1,92 USD
-# Coût total sur 12 mois :
+### Coût total sur 12 mois :
 23,09 USD
 
 Par ailleurs, il est nécessaire d'ajouter l'option "DynamoDB Data export to Amazon S3"
@@ -69,7 +69,7 @@ On prendre également l'option de backup and restore, également gratuite pour c
 
 ## Pricing des buckets S3
 
-# Pour l'historisation des matchs, supposons 1go de données
+### Pour l'historisation des matchs, supposons 1go de données
 -> cela ferait plusieurs dizaines de milliers de matchs, mais l'on imaginera que la table d'historique est plus conséquente.
 En effet, cete table d'histo pourra être agrémentée de plus de colonnes, pour pouvoir ensuite analyser ces matchs : le nombre de victoire de chaque équipe avant le match, le nombre de buts moyens, l'état de forme ressenti au moment du match, qui serait collecté de manière externe. Ces données permettraient ensuite de mettre en place un algorithme de classification, basé par exemple sur du Random Forest, pour essayer de deviner le gagnant de chaque matche à l'avance.
 
