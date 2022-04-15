@@ -37,6 +37,25 @@ Table `DynamoDB` des matches en cours :
 - score2 
 - statut (état du match : "en cours", "en pause", "abandonné", "terminé")
 
+Deux buckets `S3` pour :
+
+  - faire un historique des matchs
+  - stocker les certificats IoT
+
+> Flux de données régulier pour historisation dans un bucket S3 (json ou csv)
+
+Une Policy `MQTT` pour que les objets IoT puissent communiquer 
+
+Deux fonctions `Lambda` pour :
+
+ - Créer les objets IoT et les certificats au déploiement de la stack
+ - Supprimer les objets IoT et les certificats lors de la suppression de la stack
+
+ Deux `Custom Resources` pour :
+
+  - Déclencher la création des objets IoT
+  - Déclencher la suppression des objets IoT
+
 ## Pricing de la table DynamoDb
 Cette tables est très "humble" l 'idée est de stocker les matchs en cours ou récemment terminés.
 Tous les jours, il y'aura une extraction, ou plutôt une historisation des matchs vers un bucket Amazon S3.
@@ -108,31 +127,7 @@ Amazon Simple Storage Service (S3)	0,00 USD
 
 -> bien sûr ce pricing est poussé à la hausse : il faudrait jouer beaucoup de matchs pour remplir à ce point l'historique, et surtout la solution de machine learning peut être également implémentée en "local", sans l'aide d' AWS, assez facilement, pour réduire ce qui prend finalement 75% des coûts.
 
-
-
-Deux buckets `S3` pour :
-
-  - faire un historique des matchs
-  - stocker les certificats IoT
-
-> Flux de données régulier pour historisation dans un bucket S3 (json ou csv)
-
-
-
-
-Une Policy `MQTT` pour que les objets IoT puissent communiquer 
-
-Deux fonctions `Lambda` pour :
-
- - Créer les objets IoT et les certificats au déploiement de la stack
- - Supprimer les objets IoT et les certificats lors de la suppression de la stack
-
- Deux `Custom Resources` pour :
-
-  - Déclencher la création des objets IoT
-  - Déclencher la suppression des objets IoT
-
-### Installation de la stack AWS
+## Installation de la stack AWS
 
 > Afin d'installer la stack se trouvant dans le dossier `babyfoot-IoT`, il vous faudra AWS CLI et SAM CLI.
 
