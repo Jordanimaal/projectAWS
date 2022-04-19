@@ -1,0 +1,85 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "baby foot",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "Bonjour",
+                        "Bienvenue"
+                    ]
+                },
+                {
+                    "name": "CreerMatchIntent",
+                    "slots": [
+                        {
+                            "name": "equipeUne",
+                            "type": "AMAZON.FirstName"
+                            
+                            
+                        },
+                        {
+                            "name": "equipeDeux",
+                            "type": "AMAZON.FirstName"
+                            
+                        }
+                    ],
+                    "samples" : [
+                        "creer match avec les joueurs {equipeUne} et {equipeDeux}",
+                        "creer match avec {equipeUne} et {equipeDeux}"
+                    ]
+                },
+                {
+                    "name": "TerminerMatchIntent",
+                    "slots": [
+                        {
+                            "name": "idMatch",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "terminer le match {idMatch}"
+                    ]
+                },
+                {
+                    "name": "AjouterPointIntent",
+                    "slots":[
+                        {
+                            "name": "idMatch",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "equipe",
+                            "type": "AMAZON.FirstName"
+                        }
+                    ],
+                    "samples": [
+                        "ajoute un point au match {idMatch} pour {equipe}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                }
+            ],
+            "types": [
+                
+            ]
+        }
+    }
+  }
+  

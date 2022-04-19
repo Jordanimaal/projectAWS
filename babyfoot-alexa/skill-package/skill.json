@@ -2,12 +2,10 @@
   "manifest": {
     "publishingInformation": {
       "locales": {
-        "en-US": {
+        "fr-FR": {
           "summary": "Sample Short Description",
           "examplePhrases": [
-            "Alexa open hello world",
-            "hello",
-            "help"
+            "Alexa crée un match"
           ],
           "name": "babyfoot-alexa",
           "description": "Sample Full Description"
@@ -19,7 +17,11 @@
       "distributionCountries": []
     },
     "apis": {
-      "custom": {}
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:eu-central-1:017146709512:function:ask-babyfoot-alexa-default-skil-AlexaSkillFunction-SZLXuaDcrYOZ"
+        }
+      }
     },
     "manifestVersion": "1.0"
   }

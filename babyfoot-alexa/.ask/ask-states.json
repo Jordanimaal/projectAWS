@@ -2,9 +2,33 @@
   "askcliStatesVersion": "2020-03-31",
   "profiles": {
     "default": {
+      "skillId": "amzn1.ask.skill.4cbb93ba-5625-4685-bd28-d3dd40225879",
       "skillInfrastructure": {
         "@ask-cli/cfn-deployer": {
-          "deployState": {}
+          "deployState": {
+            "default": {
+              "s3": {
+                "bucket": "ask-babyfoot-alexa-default-eucentral1-1650367262899",
+                "key": "endpoint/build.zip"
+              },
+              "stackId": "arn:aws:cloudformation:eu-central-1:017146709512:stack/ask-babyfoot-alexa-default-skillStack-1650367262899/d739a780-bfd2-11ec-9fd5-0a37b09ca73e",
+              "outputs": [
+                {
+                  "OutputKey": "SkillEndpoint",
+                  "OutputValue": "arn:aws:lambda:eu-central-1:017146709512:function:ask-babyfoot-alexa-default-skil-AlexaSkillFunction-SZLXuaDcrYOZ",
+                  "Description": "LambdaARN for the regional endpoint"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "skillMetadata": {
+        "lastDeployHash": "veJA0kKv3OQJHvDbFVNn0ChfNEU="
+      },
+      "code": {
+        "default": {
+          "lastDeployHash": "xTwj7D7kbo9FUqyK2vvC/4eIOgE="
         }
       }
     }
