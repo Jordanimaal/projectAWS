@@ -2,19 +2,10 @@
   "manifest": {
     "publishingInformation": {
       "locales": {
-<<<<<<< HEAD
         "fr-FR": {
           "summary": "Sample Short Description",
           "examplePhrases": [
             "Alexa crée un match"
-=======
-        "en-US": {
-          "summary": "Skill de gestion de match de Baby-Foot pour Alexa",
-          "examplePhrases": [
-            "Alexa créé un match ",
-            "hello",
-            "help"
->>>>>>> a79f9ed0db84d4421fe6a79372e078403597ce50
           ],
           "name": "babyfoot-alexa",
           "description": "Sample Full Description"
