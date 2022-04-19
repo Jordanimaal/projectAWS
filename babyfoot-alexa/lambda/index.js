@@ -137,7 +137,7 @@ const  CreerMatchIntentHandler ={
       if (err) {
         console.log(err); 
         speakOutput =
-          "Une  est survenue lors de la récupération des données " + err;
+          "Une erreur est survenue lors de la récupération des données " + err;
       } else {
         id = data.Items.id[0];
         const insertParams = {
